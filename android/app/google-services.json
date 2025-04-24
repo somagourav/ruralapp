@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "738325459714",
+    "project_id": "siplab-7f186",
+    "storage_bucket": "siplab-7f186.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:738325459714:android:6750debb715381aecdc81b",
+        "android_client_info": {
+          "package_name": "com.example.ruralapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuileoI2BrFzQFmAH9hTkgKnIwQez3zhg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
