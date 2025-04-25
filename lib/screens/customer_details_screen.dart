@@ -1,38 +1,3 @@
-// import 'package:flutter/material.dart';
-// import '../models/customer_model.dart';
-
-// class CustomerDetailsScreen extends StatelessWidget {
-//   final CustomerModel customer;
-
-//   const CustomerDetailsScreen({Key? key, required this.customer}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Customer Details'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Name: ${customer.name}', style: const TextStyle(fontSize: 20)),
-//             const SizedBox(height: 12),
-//             Text('Mobile: ${customer.phone}', style: const TextStyle(fontSize: 20)),
-//             const SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () => Navigator.pop(context),
-//               child: const Text('Back to Dashboard'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
 import 'package:flutter/material.dart';
 import '../models/customer_model.dart';
 

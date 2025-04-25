@@ -1,22 +1,24 @@
-// lib/models/customer_model.dart
+import 'dart:convert';
+
 class CustomerModel {
-  final String name;
   final String phone;
+  final String name;
 
-  CustomerModel({required this.name, required this.phone});
+  CustomerModel({required this.phone, required this.name});
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'phone': phone,
-      };
-
+  // fromJson and toJson for serialization and deserialization
   factory CustomerModel.fromJson(Map<String, dynamic> json) {
     return CustomerModel(
-      name: json['name'],
       phone: json['phone'],
+      name: json['name'],
     );
   }
 
-  // Fix for missing field used in other screen
-  String get mobile => phone;
+  Map<String, dynamic> toJson() {
+    return {
+      'phone': phone,
+      'name': name,
+    };
+  }
 }
+

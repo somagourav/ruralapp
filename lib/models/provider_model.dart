@@ -1,37 +1,36 @@
 class ProviderModel {
-  final String name;
   final String phone;
-  final String aadhaar;
+  final String name;
   final String service;
-  final double rating;
+  final String aadhaar;
+  final double rating; // Add this field
 
   ProviderModel({
-    required this.name,
     required this.phone,
-    required this.aadhaar,
+    required this.name,
     required this.service,
-    required this.rating,
+    required this.aadhaar,
+    this.rating = 0.0, // Default to 0.0 if no rating is provided
   });
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'phone': phone,
-        'aadhaar': aadhaar,
-        'service': service,
-        'rating': rating,
-      };
-
+  // fromJson and toJson for serialization and deserialization
   factory ProviderModel.fromJson(Map<String, dynamic> json) {
     return ProviderModel(
-      name: json['name'],
       phone: json['phone'],
-      aadhaar: json['aadhaar'],
+      name: json['name'],
       service: json['service'],
-      rating: (json['rating'] ?? 0).toDouble(),
+      aadhaar: json['aadhaar'],
+      rating: json['rating'] ?? 0.0, // Add rating deserialization
     );
   }
 
-    String get mobile => phone;
-  String get aadhaarNumber => aadhaar;
+  Map<String, dynamic> toJson() {
+    return {
+      'phone': phone,
+      'name': name,
+      'service': service,
+      'aadhaar': aadhaar,
+      'rating': rating, // Add rating serialization
+    };
+  }
 }
-

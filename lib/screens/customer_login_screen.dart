@@ -1,75 +1,9 @@
-// import 'package:flutter/material.dart';
-// import 'package:ruralapp/screens/customer_dashboard.dart';
-// import 'package:ruralapp/services/preferences_service.dart';
-
-// class CustomerLoginScreen extends StatefulWidget {
-//   @override
-//   _CustomerLoginScreenState createState() => _CustomerLoginScreenState();
-// }
-
-// class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
-//   final TextEditingController _phoneController = TextEditingController();
-
-//   void _login() async {
-//     final phone = _phoneController.text.trim();
-//     if (phone.isEmpty || phone.length != 10) {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Enter a valid 10-digit phone number')),
-//       );
-//       return;
-//     }
-
-//     final customer = await PreferencesService.getCustomerByPhone(phone);
-//     if (customer != null) {
-//       await PreferencesService.saveCustomer(customer);
-//       Navigator.pushReplacement(
-//         context,
-//         MaterialPageRoute(
-//           builder: (_) => CustomerDashboard(customerMobile: customer.phone),
-//         ),
-//       );
-//     } else {
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         SnackBar(content: Text('Customer not found. Please register.')),
-//       );
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Customer Login')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(20.0),
-//         child: Column(
-//           children: [
-//             TextField(
-//               controller: _phoneController,
-//               decoration: InputDecoration(labelText: 'Phone Number'),
-//               keyboardType: TextInputType.phone,
-//             ),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: _login,
-//               child: Text('Login'),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
 
 import 'package:flutter/material.dart';
 import 'package:ruralapp/screens/customer_dashboard.dart';
 import 'package:ruralapp/services/preferences_service.dart';
 
 class CustomerLoginScreen extends StatefulWidget {
-  const CustomerLoginScreen({super.key});
-
   @override
   _CustomerLoginScreenState createState() => _CustomerLoginScreenState();
 }
@@ -81,7 +15,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
     final phone = _phoneController.text.trim();
     if (phone.isEmpty || phone.length != 10) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Enter a valid 10-digit phone number')),
+        SnackBar(content: Text('Enter a valid 10-digit phone number')),
       );
       return;
     }
@@ -97,7 +31,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Customer not found. Please register.')),
+        SnackBar(content: Text('Customer not found. Please register.')),
       );
     }
   }
@@ -105,70 +39,73 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFF00B4DB), Color(0xFF0083B0)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+      backgroundColor: Colors.teal.shade50,
+      appBar: AppBar(
+        backgroundColor: Colors.teal.shade700,
+        title: const Text(
+          'Customer Login',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        child: SafeArea(
-          child: Center(
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             child: Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(24.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(
-                    Icons.person,
-                    size: 80,
-                    color: Colors.white,
+                    Icons.login,
+                    size: 60,
+                    color: Colors.teal,
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    'Customer Login',
+                  Text(
+                    'Welcome Back!',
                     style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
+                      color: Colors.teal.shade700,
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _phoneController,
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      labelStyle: TextStyle(color: Colors.teal.shade700),
+                      prefixIcon: const Icon(
+                        Icons.phone,
+                        color: Colors.teal,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: BorderSide(color: Colors.teal.shade400),
+                      ),
+                    ),
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      hintText: 'Enter Phone Number',
-                      hintStyle: const TextStyle(color: Colors.white70),
-                      prefixIcon: const Icon(Icons.phone, color: Colors.white),
-                      filled: true,
-                      fillColor: Colors.white24,
-                      counterText: '',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                    ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    onPressed: _login,
-                    icon: const Icon(Icons.login),
-                    label: const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.teal,
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _login,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.teal.shade700,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
                       ),
-                      elevation: 10,
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                 ],

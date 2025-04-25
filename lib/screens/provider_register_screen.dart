@@ -1,8 +1,10 @@
+
 import 'package:flutter/material.dart';
-import 'package:ruralapp/models/provider_model.dart';
-import 'package:ruralapp/services/preferences_service.dart';
-import 'package:ruralapp/screens/provider_dashboard.dart';
-import 'package:ruralapp/screens/otp_verification_screen.dart';
+import '../models/provider_model.dart';
+import '../services/preferences_service.dart';
+import 'otp_verification_screen.dart';
+import 'role_selection_screen.dart';
+import 'customer_details_screen.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -86,94 +88,82 @@ class _ProviderRegisterScreenState extends State<ProviderRegisterScreen> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-              elevation: 10,
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Register as Provider',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepOrange,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    _buildTextField(_nameController, 'Name', Icons.person),
-                    const SizedBox(height: 10),
-                    _buildTextField(
-                        _aadhaarController, 'Aadhaar Number', Icons.credit_card),
-                    const SizedBox(height: 10),
-                    _buildTextField(_phoneController, 'Mobile Number',
-                        Icons.phone, TextInputType.phone),
-                    const SizedBox(height: 10),
-                    DropdownButtonFormField<String>(
-                      value: _selectedService,
-                      decoration: InputDecoration(
-                        labelText: 'Select Service',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                      ),
-                      items: _services.map((service) {
-                        return DropdownMenuItem(
-                          value: service,
-                          child: Text(service),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedService = value!;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _registerProvider,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.deepOrange,
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-                        ),
-                        child: const Text(
-                          'Send OTP & Register',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    )
-                  ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Register as Service Provider',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
                 ),
               ),
-            ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: 'Provider Name',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _aadhaarController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Aadhaar Number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _phoneController,
+                keyboardType: TextInputType.phone,
+                decoration: const InputDecoration(
+                  labelText: 'Phone Number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 10),
+              DropdownButtonFormField<String>(
+                value: _selectedService,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedService = value!;
+                  });
+                },
+                items: _services.map((service) {
+                  return DropdownMenuItem<String>(
+                    value: service,
+                    child: Text(service),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(
+                  labelText: 'Select Service',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _registerProvider,
+                child: const Text('Register'),
+              ),
+              const SizedBox(height: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (_) =>  RoleSelectionScreen()),
+                  );
+                },
+                child: const Text('Back to Role Selection'),
+              ),
+            ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String label,
-      IconData icon, [TextInputType keyboardType = TextInputType.text]) {
-    return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
-      decoration: InputDecoration(
-        labelText: label,
-        prefixIcon: Icon(icon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
         ),
       ),
     );

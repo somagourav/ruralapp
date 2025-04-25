@@ -46,13 +46,17 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     });
 
     final apiKey = 'd1824f80-12c0-11f0-8b17-0200cd936042';
-    final url = Uri.parse('https://2factor.in/API/V1/$apiKey/SMS/VERIFY/$sessionId/$otp');
+    final url = Uri.parse(
+      'https://2factor.in/API/V1/$apiKey/SMS/VERIFY/${Uri.encodeComponent(sessionId!)}/$otp',
+    );
 
     try {
       final response = await http.get(url);
       final data = json.decode(response.body);
+      print("Verify Response: $data");
 
-      if (data['Status'] == 'Success') {
+      if (response.statusCode == 200 && data['Status'] == 'Success') {
+        // OTP Verified
         if (role == 'customer' && customerDetails != null) {
           final customer = CustomerModel(
             name: customerDetails!['name'],
@@ -82,7 +86,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Missing user data')),
+            SnackBar(content: Text('Missing user details')),
           );
         }
       } else {
@@ -91,6 +95,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         );
       }
     } catch (e) {
+      print("Verify OTP Exception: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error verifying OTP')),
       );
@@ -104,13 +109,15 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   Future<void> resendOTP() async {
     final apiKey = 'd1824f80-12c0-11f0-8b17-0200cd936042';
     final url = Uri.parse(
-      'https://2factor.in/API/V1/$apiKey/SMS/+91$phone/AUTOGEN/${role == 'customer' ? "CustomerLogin" : "ProviderLogin"}',
+      'https://2factor.in/API/V1/$apiKey/SMS/$phone/AUTOGEN/${role == 'customer' ? "CustomerLogin" : "ProviderLogin"}',
     );
 
     try {
       final response = await http.get(url);
       final data = json.decode(response.body);
-      if (data['Status'] == 'Success') {
+      print("Resend OTP Response: $data");
+
+      if (response.statusCode == 200 && data['Status'] == 'Success') {
         setState(() {
           sessionId = data['Details'];
         });
@@ -119,10 +126,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to resend OTP')),
+          SnackBar(content: Text('Failed to resend OTP: ${data['Details']}')),
         );
       }
     } catch (e) {
+      print("Resend OTP Exception: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error resending OTP')),
       );
@@ -197,3 +205,4 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     );
   }
 }
+

@@ -1,43 +1,39 @@
-// import 'package:flutter/material.dart';
-// import '../models/provider_model.dart';
-
-// class ProviderDetailScreen extends StatelessWidget {
-//   final ProviderModel provider;
-
-//   const ProviderDetailScreen({Key? key, required this.provider}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Provider Details')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text('Phone: ${provider.phone}', style: TextStyle(fontSize: 18)),
-//             SizedBox(height: 8),
-//             Text('Aadhaar: ${provider.aadhaar}', style: TextStyle(fontSize: 18)),
-//             SizedBox(height: 8),
-//             Text('Service: ${provider.service}', style: TextStyle(fontSize: 18)),
-//             SizedBox(height: 8),
-//             Text('Rating: ${provider.rating.toStringAsFixed(1)} ⭐', style: TextStyle(fontSize: 18)),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
 
 
 
 import 'package:flutter/material.dart';
 import '../models/provider_model.dart';
+import '../services/preferences_service.dart';
 
-class ProviderDetailScreen extends StatelessWidget {
+class ProviderDetailScreen extends StatefulWidget {
   final ProviderModel provider;
 
   const ProviderDetailScreen({Key? key, required this.provider}) : super(key: key);
+
+  @override
+  State<ProviderDetailScreen> createState() => _ProviderDetailScreenState();
+}
+
+class _ProviderDetailScreenState extends State<ProviderDetailScreen> {
+  double _averageRating = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAverageRating();
+  }
+
+  void _loadAverageRating() async {
+    double avg = await PreferencesService.getAverageRating(
+      widget.provider.service,
+      widget.provider.phone,
+    );
+    if (mounted) {
+      setState(() {
+        _averageRating = avg;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,18 +61,18 @@ class ProviderDetailScreen extends StatelessWidget {
                   child: const Icon(Icons.person, color: Colors.white, size: 50),
                 ),
                 const SizedBox(height: 20),
-                detailRow(Icons.phone, 'Phone', provider.phone),
+                detailRow(Icons.phone, 'Phone', widget.provider.phone),
                 const SizedBox(height: 12),
-                detailRow(Icons.credit_card, 'Aadhaar', provider.aadhaar),
+                detailRow(Icons.credit_card, 'Aadhaar', widget.provider.aadhaar),
                 const SizedBox(height: 12),
-                detailRow(Icons.home_repair_service, 'Service', provider.service),
+                detailRow(Icons.home_repair_service, 'Service', widget.provider.service),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     const Icon(Icons.star, color: Colors.orange),
                     const SizedBox(width: 8),
                     Text(
-                      'Rating: ${provider.rating.toStringAsFixed(1)} ⭐',
+                      'Rating: ${_averageRating.toStringAsFixed(1)} ⭐',
                       style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                   ],
@@ -91,6 +87,7 @@ class ProviderDetailScreen extends StatelessWidget {
 
   Widget detailRow(IconData icon, String label, String value) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, color: Colors.teal.shade700),
         const SizedBox(width: 12),
@@ -103,7 +100,6 @@ class ProviderDetailScreen extends StatelessWidget {
           child: Text(
             value,
             style: const TextStyle(fontSize: 18),
-            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

@@ -1,49 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'authentication_screen.dart';
-
-// class RoleSelectionScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Select Role')),
-//       body: Padding(
-//         padding: const EdgeInsets.all(30.0),
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.pushReplacement(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (_) => AuthenticationScreen(role: 'customer'),
-//                   ),
-//                 );
-//               },
-//               child: Text("I am Customer"),
-//             ),
-//             SizedBox(height: 20),
-//             ElevatedButton(
-//               onPressed: () {
-//                 Navigator.pushReplacement(
-//                   context,
-//                   MaterialPageRoute(
-//                     builder: (_) => AuthenticationScreen(role: 'provider'),
-//                   ),
-//                 );
-//               },
-//               child: Text("I am Service Provider"),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 import 'package:flutter/material.dart';
 import 'authentication_screen.dart';
 
@@ -66,7 +20,7 @@ class RoleSelectionScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Welcome to Rural Services',
+                  'Welcome to Skilled Workers App',
                   style: TextStyle(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,

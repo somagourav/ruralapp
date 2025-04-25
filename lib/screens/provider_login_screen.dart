@@ -108,5 +108,3 @@ class _ProviderLoginScreenState extends State<ProviderLoginScreen> {
     );
   }
 }
-
-
