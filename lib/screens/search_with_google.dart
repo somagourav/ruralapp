@@ -1,200 +1,8 @@
-// import 'dart:convert';
-// import 'package:flutter/material.dart';
-// import 'package:geolocator/geolocator.dart';
-// import 'package:http/http.dart' as http;
-
-// class SearchWithGoogleScreen extends StatefulWidget {
-//   final List<String> services;
-
-//   const SearchWithGoogleScreen({Key? key, required this.services}) : super(key: key);
-
-//   @override
-//   State<SearchWithGoogleScreen> createState() => _SearchWithGoogleScreenState();
-// }
-
-// class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
-//   bool isLoading = false;
-//   List<dynamic> nearbyResults = [];
-//   String? errorMessage;
-
-//   final String apiKey = 'AIzaSyAxyz_gFi-rMNiXHbJ13YjoLwRC72Rkovk';
-//   Future<void> _getNearbyProviders(String service) async {
-//   setState(() {
-//     isLoading = true;
-//     nearbyResults = [];
-//     errorMessage = null;
-//   });
-
-//   try {
-//     Position position = await Geolocator.getCurrentPosition(
-//       desiredAccuracy: LocationAccuracy.high,
-//     );
-
-//     final lat = position.latitude;
-//     final lng = position.longitude;
-
-//     final url = Uri.parse(
-//       'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
-//       '?location=$lat,$lng'
-//       '&radius=5000'
-//       '&keyword=${Uri.encodeComponent(service)}'
-//       '&key=$apiKey',
-//     );
-
-//     final response = await http.get(url);
-//     final data = json.decode(response.body);
-
-//     if (data['status'] == 'OK') {
-//       List<dynamic> results = data['results'];
-
-//       // Add distance to each result
-//       for (var result in results) {
-//         final loc = result['geometry']['location'];
-//         final providerLat = loc['lat'];
-//         final providerLng = loc['lng'];
-
-//         double distanceInMeters = Geolocator.distanceBetween(
-//           lat,
-//           lng,
-//           providerLat,
-//           providerLng,
-//         );
-
-//         result['distance'] = distanceInMeters;
-//       }
-
-//       // Sort by distance
-//       results.sort((a, b) => (a['distance'] as double).compareTo(b['distance'] as double));
-
-//       setState(() {
-//         nearbyResults = results;
-//       });
-//     } else {
-//       setState(() {
-//         errorMessage = data['error_message'] ?? 'No results found.';
-//       });
-//     }
-//   } catch (e) {
-//     setState(() {
-//       errorMessage = 'Error: $e';
-//     });
-//   } finally {
-//     setState(() {
-//       isLoading = false;
-//     });
-//   }
-// }
-
-//   Widget _buildGridItem(String service) {
-//     return GestureDetector(
-//       onTap: () {
-//         _getNearbyProviders(service);
-//       },
-//       child: Container(
-//         decoration: BoxDecoration(
-//           color: Colors.lightBlue.shade50,
-//           borderRadius: BorderRadius.circular(12),
-//           border: Border.all(color: Colors.blueAccent),
-//         ),
-//         padding: const EdgeInsets.all(12),
-//         margin: const EdgeInsets.all(6),
-//         child: Center(
-//           child: Text(
-//             service,
-//             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-//             textAlign: TextAlign.center,
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildResultsSection() {
-//     if (isLoading) {
-//       return const Padding(
-//         padding: EdgeInsets.symmetric(vertical: 16.0),
-//         child: Center(child: CircularProgressIndicator()),
-//       );
-//     }
-
-//     if (errorMessage != null) {
-//       return Padding(
-//         padding: const EdgeInsets.symmetric(vertical: 16.0),
-//         child: Center(
-//           child: Text(
-//             errorMessage!,
-//             style: const TextStyle(color: Colors.red),
-//           ),
-//         ),
-//       );
-//     }
-
-//     if (nearbyResults.isEmpty) return const SizedBox();
-
-//     return ListView.builder(
-//       physics: const NeverScrollableScrollPhysics(),
-//       shrinkWrap: true,
-//       itemCount: nearbyResults.length,
-//       itemBuilder: (context, index) {
-//         final place = nearbyResults[index];
-//         return Card(
-//           margin: const EdgeInsets.symmetric(vertical: 6),
-//           child: ListTile(
-//             title: Text(place['name']),
-//             subtitle: Text(place['vicinity'] ?? 'No address'),
-//             leading: const Icon(Icons.place),
-//           ),
-//         );
-//       },
-//     );
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Search Providers by Location'),
-//       ),
-//       body: SingleChildScrollView(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             const Text(
-//               'Select a Service:',
-//               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-//             ),
-//             const SizedBox(height: 10),
-//             GridView.builder(
-//               shrinkWrap: true,
-//               physics: const NeverScrollableScrollPhysics(),
-//               itemCount: widget.services.length,
-//               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-//                 crossAxisCount: 2,
-//                 crossAxisSpacing: 10,
-//                 mainAxisSpacing: 10,
-//                 childAspectRatio: 2.5,
-//               ),
-//               itemBuilder: (context, index) {
-//                 return _buildGridItem(widget.services[index]);
-//               },
-//             ),
-//             const SizedBox(height: 20),
-//             _buildResultsSection(),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-
-
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 import 'nearby_providers_screen.dart';
 
 class SearchWithGoogleScreen extends StatefulWidget {
@@ -210,6 +18,13 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
   final String apiKey = 'AIzaSyAxyz_gFi-rMNiXHbJ13YjoLwRC72Rkovk';
 
   Future<void> _getNearbyProviders(String service) async {
+    // Ensure permission is granted before accessing location
+    final hasPermission = await _checkLocationPermission();
+    if (!hasPermission) {
+      _showError('Location permission is required to find nearby providers.');
+      return;
+    }
+
     try {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       final lat = position.latitude;
@@ -251,6 +66,25 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
     } catch (e) {
       _showError('Error: $e');
     }
+  }
+
+  Future<bool> _checkLocationPermission() async {
+    PermissionStatus status = await Permission.location.status;
+
+    if (status.isGranted) return true;
+
+    if (status.isDenied) {
+      // Request location permission
+      status = await Permission.location.request();
+      return status.isGranted;
+    }
+
+    if (status.isPermanentlyDenied) {
+      // Open settings to enable location permission
+      await openAppSettings();
+    }
+
+    return false;
   }
 
   void _showError(String message) {
@@ -357,7 +191,7 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Select a Service:',
+            const Text('Select a Service: ',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             Expanded(
@@ -378,3 +212,7 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
     );
   }
 }
+
+
+
+

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:ruralapp/screens/customer_dashboard.dart';
 import 'package:ruralapp/screens/provider_dashboard.dart';
 import 'package:ruralapp/screens/role_selection_screen.dart';
@@ -10,7 +11,15 @@ import 'models/provider_model.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // 🔥 Initialize Firebase
+  await _requestLocationPermission(); // 🌍 Request location permission at launch
   runApp(const MyApp());
+}
+
+Future<void> _requestLocationPermission() async {
+  final status = await Permission.location.status;
+  if (!status.isGranted) {
+    await Permission.location.request();
+  }
 }
 
 class MyApp extends StatelessWidget {
