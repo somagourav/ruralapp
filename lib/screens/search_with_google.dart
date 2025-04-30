@@ -18,7 +18,6 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
   final String apiKey = 'AIzaSyAxyz_gFi-rMNiXHbJ13YjoLwRC72Rkovk';
 
   Future<void> _getNearbyProviders(String service) async {
-    // Ensure permission is granted before accessing location
     final hasPermission = await _checkLocationPermission();
     if (!hasPermission) {
       _showError('Location permission is required to find nearby providers.');
@@ -74,13 +73,11 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
     if (status.isGranted) return true;
 
     if (status.isDenied) {
-      // Request location permission
       status = await Permission.location.request();
       return status.isGranted;
     }
 
     if (status.isPermanentlyDenied) {
-      // Open settings to enable location permission
       await openAppSettings();
     }
 
@@ -131,6 +128,12 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
         return Icons.architecture;
       case 'house for rent':
         return Icons.home_work;
+      case 'pop working':
+        return Icons.wallpaper;
+      case 'home made product':
+        return Icons.shopping_cart;
+      case 'skill training':
+        return Icons.school;
       default:
         return Icons.miscellaneous_services;
     }
@@ -180,6 +183,13 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final allServices = [
+      ...widget.services,
+      'POP working',
+      'Home Made product',
+      'Skill training',
+    ];
+
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
@@ -196,14 +206,15 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
             const SizedBox(height: 12),
             Expanded(
               child: GridView.builder(
-                itemCount: widget.services.length,
+                itemCount: allServices.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
                   childAspectRatio: 1,
                 ),
-                itemBuilder: (context, index) => _buildGridItem(widget.services[index]),
+                itemBuilder: (context, index) =>
+                    _buildGridItem(allServices[index]),
               ),
             ),
           ],
@@ -212,7 +223,3 @@ class _SearchWithGoogleScreenState extends State<SearchWithGoogleScreen> {
     );
   }
 }
-
-
-
-
