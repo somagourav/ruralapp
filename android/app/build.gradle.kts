@@ -64,8 +64,8 @@
 //     source = "../.."
 // }
 
-
-
+import java.util.Properties
+import java.io.FileInputStream
 
 plugins {
     id("com.android.application")
@@ -86,12 +86,34 @@ dependencies {
     implementation("com.android.support:appcompat-v7:28.0.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.5.21")
 }
-
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("key.properties")
+keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 android {
-    namespace = "com.example.ruralapp"
+    namespace = "com.somagourav.ruralapp"
     compileSdk = 35
     ndkVersion = "27.0.12077973"
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -102,18 +124,14 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.ruralapp"
+        applicationId = "com.somagourav.ruralapp"
         minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
     }
 
-    buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("debug")
-        }
-    }
+
 }
 
 flutter {
